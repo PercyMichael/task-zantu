@@ -20,16 +20,17 @@ RUN apk add --no-cache \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy application code
+# Set working directory for Laravel
+WORKDIR /var/www/html
+
+# Copy the application code
 COPY . .
 
-# Install PHP dependencies
+# Install dependencies via Composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www
+# Expose PHP-FPM port (9000)
+EXPOSE 9000
 
-# Expose PHP-FPM port
-EXPOSE 8000
-
+# Start PHP-FPM
 CMD ["php-fpm"]
