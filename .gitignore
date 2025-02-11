@@ -1,0 +1,13 @@
+# Ignore environment files
+.env
+backend/.env
+frontend/.env
+
+# Ignore dependencies
+node_modules/
+vendor/
+
+# Ignore Docker build files
+backend/storage/
+backend/bootstrap/cache/
+db_data/
