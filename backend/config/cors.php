@@ -19,10 +19,6 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'http://localhost:8080',  // Your frontend URL (for local development)
-    ],
-
     'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
