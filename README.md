@@ -11,10 +11,28 @@ This project is a containerized application using Docker with the following serv
 - **NPM** – Node.js package manager for frontend dependencies
 - **phpMyAdmin** – Web-based MySQL database management tool
 
-### 3️⃣ Build and Start Containers
+### 3️⃣ Build and Start Containers Once
 
 ```bash
 docker compose up -d --build
+```
+
+### Create and start containers
+
+```bash
+docker compose up -d
+```
+
+### Stop and remove containers, networks
+
+```bash
+docker compose down
+```
+
+### Stop all services
+
+```bash
+docker compose stop
 ```
 
 ### 4️⃣ Access Services
