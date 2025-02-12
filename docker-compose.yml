@@ -15,7 +15,12 @@ services:
   frontend:
     build: frontend
     container_name: vite-frontend
-    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Prevent overwriting node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     depends_on:
       - backend
     ports:
@@ -45,7 +50,7 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: task-zantu-db-1
+    container_name: task-zantu-db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: secret  # Change this!
@@ -56,16 +61,13 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - app-network
-    # healthcheck:  # Example healthcheck (adapt as needed)
-    #   test: ["CMD-SHELL", "mysqladmin ping -h db -u $$MYSQL_USER -p$$MYSQL_PASSWORD"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
+
   
   phpmyadmin:
         image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
         ports:
-            - "8081:8080"
+          - "8081:8081"
         links:
             - db
         environment:
@@ -74,6 +76,8 @@ services:
             PMA_ARBITRARY: 1
         volumes:
             - .docker/phpmyadmin/sessions:/sessions
+        networks:
+            - app-network
 
 volumes:
   db_data:
