@@ -28,25 +28,31 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
 # Install Composer
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Install Laravel
-RUN composer create-project laravel/laravel .
-
-# Copy existing application directory contents if any
+# Copy existing application directory contents
 COPY . /var/www/html/
+
+# Set ownership and permissions for the /var/www/html directory to www-data
+RUN chown -R www-data:www-data /var/www/html/
+
 
 # Install dependencies
 RUN composer install
 
+
+# Set up environment file
+RUN cp .env.example .env && \
+    sed -i \
+    -e "s/DB_HOST=.*/DB_HOST=db/" \
+    -e "s/DB_PORT=.*/DB_PORT=3306/" \
+    -e "s/DB_DATABASE=.*/DB_DATABASE=mydb/" \
+    -e "s/DB_USERNAME=.*/DB_USERNAME=laravel_user/" \
+    -e "s/DB_PASSWORD=.*/DB_PASSWORD=mypassword/" \
+    -e "s/SESSION_DRIVER=.*/SESSION_DRIVER=database/" \
+    .env
+
+
 # Generate application key
 RUN php artisan key:generate
-
-# Set proper permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
 
 USER www-data
 

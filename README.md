@@ -14,29 +14,14 @@ This project is a containerized application using Docker with the following serv
 ### 3️⃣ Build and Start Containers Once
 
 ```bash
-docker compose up -d --build
+docker-compose build
+docker-compose up
+docker-compose exec backend php  artisan migrate
 ```
 
-### Create and start containers
-
-```bash
-docker compose up -d
-```
-
-### Stop and remove containers, networks
-
-```bash
-docker compose down
-```
-
-### Stop all services
-
-```bash
-docker compose stop
-```
 
 ### 4️⃣ Access Services
 
 - **Frontend**: [`http://localhost:8080`](http://localhost:8080)
 - **Backend API**: [`http://localhost:8000`](http://localhost:8000)
-- **phpMyAdmin**: [`http://localhost:8081`](http://localhost:8081)
+
