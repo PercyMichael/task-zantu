@@ -1,36 +1,55 @@
-FROM php:8.3.11-fpm-alpine
+# stage 1: build stage
+FROM php:8.3-fpm-alpine as build
 
-WORKDIR /var/www
-
-# Install dependencies
+# Update package list and install dependencies
 RUN apk add --no-cache \
-    git \
-    unzip \
-    curl \
+    build-base \
     libpng-dev \
     libjpeg-turbo-dev \
     libwebp-dev \
+    libxpm-dev \
     freetype-dev \
-    icu-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    bash \
+    fcgi \
+    libmcrypt-dev \
     oniguruma-dev \
-    shadow \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install gd pdo pdo_mysql opcache intl mbstring
+    mysql-client \
+    mysql-dev
+
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath opcache
 
 # Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
-# Set working directory for Laravel
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy the application code
-COPY . .
+# Install Laravel
+RUN composer create-project laravel/laravel .
 
-# Install dependencies via Composer
-RUN composer install --no-dev --optimize-autoloader
+# Copy existing application directory contents if any
+COPY . /var/www/html/
 
-# Expose PHP-FPM port (9000)
+# Install dependencies
+RUN composer install
+
+# Generate application key
+RUN php artisan key:generate
+
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
+
+USER www-data
+
 EXPOSE 9000
 
-# Start PHP-FPM
 CMD ["php-fpm"]

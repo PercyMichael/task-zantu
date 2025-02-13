@@ -1,13 +1,13 @@
-FROM node:18-alpine
+FROM node:latest
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package*.json ./
+# Create a new Vite + Vue project
+RUN npm create vite@latest . -- --template vue
 
+# Install dependencies
 RUN npm install
-
-COPY . .
 
 EXPOSE 8080
 
-CMD [ "npm", "run", "dev" ]
+CMD ["npm", "run", "dev", "--", "--host"]
