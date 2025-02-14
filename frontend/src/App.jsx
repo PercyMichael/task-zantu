@@ -9,12 +9,14 @@ const App = () => {
   const fetchData = async () => {
     const headersList = {
       Accept: "*/*",
+      "Access-Control-Allow-Origin": "*",
     };
 
     const reqOptions = {
-      url: "http://localhost:8000/api/",
+      url: "http://localhost/api/",
       method: "GET",
       headers: headersList,
+      withCredentials: false,
     };
 
     try {
@@ -32,7 +34,7 @@ const App = () => {
   }, []);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) return <div>Hello {error}</div>;
 
   return (
     <div>
