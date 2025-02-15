@@ -33,6 +33,8 @@ COPY . /var/www/html/
 
 # Set ownership and permissions for the /var/www/html directory to www-data
 RUN chown -R www-data:www-data /var/www/html/
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 
 # Install dependencies
@@ -50,7 +52,7 @@ RUN cp .env.example .env && \
     -e "s/SESSION_DRIVER=.*/SESSION_DRIVER=database/" \
     .env
 
-
+#hiii
 # Generate application key
 RUN php artisan key:generate
 
