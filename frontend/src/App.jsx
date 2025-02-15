@@ -9,14 +9,14 @@ const App = () => {
   const fetchData = async () => {
     const headersList = {
       Accept: "*/*",
-      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
     };
 
     const reqOptions = {
-      url: "http://localhost/api/",
+      url: "http://localhost:80/api",
       method: "GET",
       headers: headersList,
-      withCredentials: false,
+      withCredentials: true,
     };
 
     try {
