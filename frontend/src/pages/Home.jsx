@@ -1,7 +1,39 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
 
 const Home = () => {
+  const { setUser, user } = useContext(AppContext);
+
+  async function logout() {
+    try {
+      // Optionally, send a request to invalidate the token on the server
+      await axios.post(
+        "http://127.0.0.1:8000/api/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // or use sessionStorage
+          },
+        }
+      );
+
+      // Remove the token from localStorage (or sessionStorage)
+      localStorage.removeItem("token"); // or sessionStorage.removeItem("token");
+
+      // Optionally, reset the user state (if you're using React or similar)
+      setUser(null); // Assuming `setUser` clears the user state
+
+      console.log("Logged out successfully!");
+    } catch (error) {
+      console.error(
+        "Error logging out:",
+        error.response ? error.response.data : error
+      );
+    }
+  }
+
   return (
     <div className="flex flex-col h-screen">
       <header>
@@ -11,7 +43,7 @@ const Home = () => {
           </div>
           <div className="flex-none">
             <Link to="/login">
-              <button className="btn">
+              <button className="btn" onClick={logout}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -34,6 +66,7 @@ const Home = () => {
       </header>
       <main className="bg-gradient-to-b from-slate-200 to-cyan-50 flex-1">
         <div className="min-w-full p-8 md:py-10 md:min-w-3/5 md:max-w-1/2 mx-auto">
+          <h3 className="font-bold text-lg p-3">Hello {user?.name}</h3>
           <ul className="list bg-base-100 rounded-box shadow-md">
             <li className="p-4 pb-2 text-xs tracking-wide flex justify-between items-center">
               <span>Most played songs this week</span>

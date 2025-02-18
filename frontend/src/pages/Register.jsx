@@ -63,14 +63,37 @@ const Register = () => {
               At least one uppercase letter
             </p>
 
+            {/* Password Confirmation */}
+            <label className="input input-xl w-full validator">
+              <PasswordIcon />
+              <input
+                name="password_confirmation"
+                type="password"
+                required
+                placeholder="Confirm Password"
+                minlength="8"
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+              />
+            </label>
+            <p className="validator-hint hidden">
+              Must be more than 8 characters, including
+              <br />
+              At least one number
+              <br />
+              At least one lowercase letter
+              <br />
+              At least one uppercase letter
+            </p>
+
             <div className="mt-6">
               <button className="btn btn-success btn-block btn-xl">
-                Login Now
+                Register
               </button>
               <p className="text-center mt-4">
-                <Link to="/register">
+                <Link to="/login">
                   Already regitered?{" "}
-                  <sapn className="text-green-700">Login Now</sapn>
+                  <span className="text-green-700">Login Now</span>
                 </Link>
               </p>
             </div>
