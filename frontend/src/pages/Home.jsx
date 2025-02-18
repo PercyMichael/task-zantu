@@ -74,9 +74,25 @@ const Home = () => {
             </p>
           </div>
           <ul className="list bg-base-100 rounded-box shadow-md">
-            <div className="p-4 pb-2 text-xs w-full flex justify-between items-center">
+            <div className="p-4 pb-2 text-xs w-full flex justify-between items-center py-8">
               <h3 className="text-lg font-bold px-5 opacity-50">Tasks</h3>
-              <button className="btn btn-success">Success</button>
+              <button className="btn btn-success">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+                New Task
+              </button>
             </div>
 
             <Task />
