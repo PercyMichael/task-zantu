@@ -1,13 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   server: {
-    proxy: {
-      "/api": "localhost:80",
-    },
     host: true, // Equivalent to "0.0.0.0" but allows easier Docker handling
     port: 8080,
     strictPort: true,

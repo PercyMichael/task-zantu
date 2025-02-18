@@ -58,6 +58,7 @@ RUN cp .env.example .env && \
 #hiii
 # Generate application key
 RUN php artisan key:generate
+RUN php artisan migrate
 
 USER www-data
 

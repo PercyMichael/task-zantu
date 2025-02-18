@@ -55,6 +55,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: secret  # Change this!
+      PMA_HOST: task-zantu-db
       MYSQL_DATABASE: mydb
       MYSQL_USER: laravel_user
       MYSQL_PASSWORD: mypassword

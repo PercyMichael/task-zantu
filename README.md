@@ -16,10 +16,10 @@ This project is a containerized application using Docker with the following serv
 ```bash
 docker-compose build
 docker-compose up
-docker-compose exec backend php artisan migrate
+# docker-compose exec backend php artisan migrate
 ```
 
 ### 4️⃣ Access Services
 
 - **Frontend**: [`http://localhost:8080`](http://localhost:8080)
-- **Backend API**: [`http://localhost:8000`](http://localhost:8000)
+- **Backend API**: [`http://localhost:80`](http://localhost:8000)
