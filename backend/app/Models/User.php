@@ -46,4 +46,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    /**
+     * Get all of the tasks owned by the user.
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'user_id'); // The foreign key is 'user_id' in the tasks table
+    }
+
+    /**
+     * Get all of the tasks assigned to the user.
+     */
+    public function assignedTasks()
+    {
+        return $this->hasMany(Task::class, 'assignee_id'); // The foreign key is 'assignee_id'
+    }
 }

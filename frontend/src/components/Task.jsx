@@ -1,25 +1,38 @@
+import axios from "axios";
 import React from "react";
 
-const Task = () => {
+const Task = ({
+  id,
+  name,
+  description,
+  assignee,
+  dueDate,
+  deleteTask, // Function to delete task
+  status,
+  taskNumber, // Adding task number
+}) => {
+  const formatDueDate = (dueDate) => {
+    const date = new Date(dueDate);
+    return date.toLocaleString(); // This will display in the local timezone with a readable format
+  };
+
   return (
     <li className="list-row">
-      <div class="text-4xl font-thin opacity-30 tabular-nums">01</div>
+      <div class="text-4xl font-thin opacity-30 tabular-nums">{taskNumber}</div>
 
       <div>
         <div>
           <div className="flex items-center gap-x-2">
-            <h2 className="font-black text-lg">Dio Lupa</h2>
+            <h2 className="font-black text-lg">{name}</h2>
             <span className="status status-lg status-success"></span>
           </div>
           <div className="text-xs font-semibold py-2">
             <span className="opacity-60">Assigned to</span>{" "}
-            <span className="text-black">Percy Michael</span>
-            <p class="list-col-wrap text-xs font-light pt-2">
-              "Remaining Reason" became an instant hit, praised for its haunting
-              sound and emotional depth.
-            </p>
+            <span className="text-black">{assignee}</span>
+            <p class="list-col-wrap text-xs font-light pt-2">{description}</p>
             <p class="text-xs font-light text-gray-600 pt-2">
-              Expected By <span class="font-semibold">Mar 20, 2025</span>
+              Expected By{" "}
+              <span class="font-semibold">{formatDueDate(dueDate)}</span>
             </p>{" "}
           </div>
         </div>
@@ -41,7 +54,8 @@ const Task = () => {
         </svg>
       </button>
       <button
-        onClick={() => document.getElementById("my_modal_5").showModal()}
+        // onClick={() => document.getElementById("my_modal_5").showModal()}
+        onClick={() => deleteTask(id)} // Delete task
         className="btn btn-square btn-link text-red-500"
       >
         <svg
@@ -60,7 +74,7 @@ const Task = () => {
         </svg>
       </button>
 
-      <dialog id="my_modal_5" className="modal">
+      <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
