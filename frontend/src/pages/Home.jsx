@@ -8,6 +8,13 @@ const Home = () => {
   const { user } = useContext(AppContext);
   const [tasks, setTasks] = useState([]);
 
+  const [taskName, setTaskName] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [assignee, setAssignee] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
+  const [showToast, setShowToast] = useState(false);
+
   async function getTasks() {
     try {
       const response = await axios.get("http://127.0.0.1:8000/api/tasks", {
@@ -27,12 +34,11 @@ const Home = () => {
     }
   }
 
+  async function fetchData() {
+    const tasksData = await getTasks();
+    setTasks(tasksData);
+  }
   useEffect(() => {
-    async function fetchData() {
-      const tasksData = await getTasks();
-      setTasks(tasksData);
-    }
-
     fetchData();
   }, []);
 
@@ -58,6 +64,53 @@ const Home = () => {
     }
   };
 
+  const handleCreateTask = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const newTask = {
+      name: taskName,
+      description: taskDescription,
+      due_date: dueDate,
+      assignee: assignee,
+      assignee_id: 2,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/tasks",
+        newTask,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Task created:", response.data);
+
+      // Update tasks list with new task
+      fetchData();
+      // Clear form fields after submission
+      setTaskName("");
+      setTaskDescription("");
+      setDueDate("");
+      setAssignee("");
+
+      // Close modal
+      // document.getElementById("my_modal_5").close();
+      setShowToast(true); // Show toast notification
+    } catch (error) {
+      console.error(
+        "Error creating task:",
+        error.response ? error.response.data : error
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <Header />
@@ -69,9 +122,96 @@ const Home = () => {
               Welcome back to your task management dashboard. Let's get started!
             </p>
           </div>
+
+          {showToast && (
+            <div className="toast">
+              <div className="alert alert-info">
+                <span>Task created successfully!</span>
+              </div>
+            </div>
+          )}
+
           <ul className="list bg-base-100 rounded-box shadow-md">
             <div className="p-4 pb-2 text-xs w-full flex justify-between items-center py-8">
               <h3 className="text-lg font-bold px-5 opacity-50">Tasks</h3>
+
+              <dialog id="my_modal_5" className="modal">
+                <div className="modal-box">
+                  <form method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                      ✕
+                    </button>
+                  </form>
+
+                  <h3 className="font-bold text-lg mb-3">Create New Task</h3>
+                  {loading ? (
+                    // Show spinner while loading
+                    <div className="flex justify-center py-4">
+                      <span className="loading loading-spinner loading-lg"></span>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleCreateTask}>
+                      <div className="mb-3">
+                        <input
+                          type="text"
+                          className="input input-bordered w-full"
+                          placeholder="Enter task name"
+                          value={taskName}
+                          onChange={(e) => setTaskName(e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <textarea
+                          className="textarea textarea-bordered w-full"
+                          placeholder="Enter task description"
+                          value={taskDescription}
+                          onChange={(e) => setTaskDescription(e.target.value)}
+                          required
+                        ></textarea>
+                      </div>
+
+                      <div className="mb-3">
+                        <input
+                          type="date"
+                          className="input input-bordered w-full"
+                          value={dueDate}
+                          onChange={(e) => setDueDate(e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <input
+                          type="text"
+                          className="input input-bordered w-full"
+                          placeholder="Enter assignee name"
+                          value={assignee}
+                          onChange={(e) => setAssignee(e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div className="modal-action">
+                        <button type="submit" className="btn btn-success">
+                          Create Task
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-outline"
+                          onClick={() =>
+                            document.getElementById("my_modal_5").close()
+                          }
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
+              </dialog>
+
               <button
                 className="btn btn-success"
                 onClick={() =>
@@ -104,7 +244,7 @@ const Home = () => {
                   taskNumber={index + 1} // Adding task number
                   name={task.name}
                   status={task.completed ? "Completed" : "Pending"} // Task status
-                  assignee={task.assignee.name} // Assigned user (e.g., Percy Michael)
+                  assignee={task.assignee?.name} // Assigned user (e.g., Percy Michael)
                   description={task.description} // Task description
                   dueDate={task.due_date} // Expected completion date
                   deleteTask={deleteTask} // Pass deleteTask as a prop

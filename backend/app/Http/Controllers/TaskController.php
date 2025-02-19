@@ -27,19 +27,25 @@ class TaskController extends Controller
     // Store a new task
     public function store(Request $request)
     {
+        $user = $request->user(); // Get the authenticated user
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
             'completed' => 'boolean',
             'completed_at' => 'nullable|date',
             'due_date' => 'nullable|date',
             'description' => 'nullable|string',
-            'assignee_id' => 'nullable|integer',
+            'assignee_id' => 'nullable|integer|exists:users,id',
         ]);
 
+        // Assign the user_id automatically
+        $validated['user_id'] = $user->id;
+
         $task = Task::create($validated);
+
         return response()->json($task, 201);
     }
+
 
     // Get a single task
     public function show($id)
