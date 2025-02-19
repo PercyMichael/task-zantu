@@ -9,7 +9,7 @@ export default function AppProvider({ children }) {
 
   async function getUser() {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/api/user", {
+      const res = await axios.get("http://127.0.0.1:80/api/user", {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "*/*",

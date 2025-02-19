@@ -10,7 +10,7 @@ const Header = () => {
     try {
       // Optionally, send a request to invalidate the token on the server
       await axios.post(
-        "http://127.0.0.1:8000/api/logout",
+        "http://127.0.0.1:80/api/logout",
         {},
         {
           headers: {

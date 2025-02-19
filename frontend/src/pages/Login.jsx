@@ -36,7 +36,7 @@ const Login = () => {
     try {
       // Send login request with Axios and headers
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/login", // Replace with your actual login API endpoint
+        "http://127.0.0.1:80/api/login", // Replace with your actual login API endpoint
         {
           email,
           password,

@@ -19,7 +19,7 @@ const Home = () => {
 
   async function getTasks() {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/tasks", {
+      const response = await axios.get("http://127.0.0.1:80/api/tasks", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`, // Use sessionStorage if needed
         },
@@ -38,7 +38,7 @@ const Home = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/users", {
+      const response = await axios.get("http://127.0.0.1:80/api/users", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -67,7 +67,7 @@ const Home = () => {
   const deleteTask = async (taskId) => {
     try {
       const response = await axios.delete(
-        `http://127.0.0.1:8000/api/tasks/${taskId}`,
+        `http://127.0.0.1:80/api/tasks/${taskId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -100,7 +100,7 @@ const Home = () => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/tasks",
+        "http://127.0.0.1:80/api/tasks",
         newTask,
         {
           headers: {
