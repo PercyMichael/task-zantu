@@ -17,6 +17,15 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+
+
+    public function users(Request $request)
+    {
+        $users = User::all();
+        return ['users' => $users];
+    }
+
+
     public function register(Request $request)
     {
 
@@ -48,6 +57,8 @@ class UserController extends Controller
             'token' => $token->plainTextToken,
         ]);
     }
+
+
 
     public function login(Request $request)
     {

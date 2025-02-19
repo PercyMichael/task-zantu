@@ -6,6 +6,8 @@ import Header from "../components/header";
 
 const Home = () => {
   const { user } = useContext(AppContext);
+  const [users, setUsers] = useState([]);
+
   const [tasks, setTasks] = useState([]);
 
   const [taskName, setTaskName] = useState("");
@@ -23,7 +25,7 @@ const Home = () => {
         },
       });
 
-      console.log("Tasks:", response.data);
+      // console.log("Tasks:", response.data);
       return response.data; // Return tasks for further use
     } catch (error) {
       console.error(
@@ -34,13 +36,33 @@ const Home = () => {
     }
   }
 
-  async function fetchData() {
-    const tasksData = await getTasks();
-    setTasks(tasksData);
-  }
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/users", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      console.log("Fetched Users: ", response.data); // Check the response here
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      return [];
+    }
+  };
+
+  // Fetch tasks and users on page load
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchData = async () => {
+      const tasksData = await getTasks();
+      const userData = await fetchUsers();
+      console.log("Fetched User Data:", userData);
+      setTasks(tasksData);
+      setUsers(userData);
+    };
+
+    fetchData(); // Fetch tasks and users once on component mount
+  }, []); // Empty dependency array means it runs only once on component mount
 
   const deleteTask = async (taskId) => {
     try {
@@ -182,15 +204,26 @@ const Home = () => {
                         />
                       </div>
 
+                      {/* User Assignment Dropdown */}
                       <div className="mb-3">
-                        <input
-                          type="text"
-                          className="input input-bordered w-full"
-                          placeholder="Enter assignee name"
-                          value={assignee}
-                          onChange={(e) => setAssignee(e.target.value)}
-                          required
-                        />
+                        <h1>Hello, {users.length} users</h1>
+                        <select
+                          value={assignee} // Controlled value
+                          className="select w-full"
+                        >
+                          <option disabled selected>
+                            {loading ? "Loading users..." : "Assign user"}
+                          </option>
+                          {users.length > 0 ? (
+                            users.map((user) => (
+                              <option key={user.id} value={user.id}>
+                                {user.name}
+                              </option>
+                            ))
+                          ) : (
+                            <option disabled>No users found</option>
+                          )}
+                        </select>
                       </div>
 
                       <div className="modal-action">
