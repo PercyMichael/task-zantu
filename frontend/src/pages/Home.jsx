@@ -206,7 +206,7 @@ const Home = () => {
 
                       {/* User Assignment Dropdown */}
                       <div className="mb-3">
-                        <h1>Hello, {users.length} users</h1>
+                        {/* <h1>Hello, {users.length} users</h1> */}
                         <select
                           value={assignee} // Controlled value
                           className="select w-full"
